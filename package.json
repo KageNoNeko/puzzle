@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@pixi/filter-drop-shadow": "^2.6.0",
+    "@pixi/filter-glow": "^2.5.0",
     "@types/pixi.js": "^4.8.3",
     "awesome-typescript-loader": "^5.2.1",
     "html-webpack-plugin": "^3.2.0",

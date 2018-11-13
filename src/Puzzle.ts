@@ -1,8 +1,9 @@
 import * as PIXI from 'pixi.js';
+import { PuzzlePiece } from './PuzzlePiece';
 
 export class Puzzle extends PIXI.Application {
 
-    protected valid: boolean;
+    protected _valid: boolean;
     protected image: PIXI.Texture;
     protected pieceSize: {
         width: number,
@@ -13,6 +14,16 @@ export class Puzzle extends PIXI.Application {
         }
     };
 
+    protected get pieces(): PuzzlePiece[] {
+
+        return <PuzzlePiece[]>this.stage.children;
+    }
+
+    get valid(): boolean {
+
+        return this.pieces.every((piece) => piece.valid);
+    }
+
     protected safeCoord(coord: number): number {
 
         return Math.round(coord * 10) / 10;
@@ -20,58 +31,39 @@ export class Puzzle extends PIXI.Application {
 
     protected createPieceForCell(row: number, column: number): PIXI.Sprite {
 
-        const texture = new PIXI.Texture(this.image.baseTexture, new PIXI.Rectangle(
-            this.safeCoord(column * this.pieceSize.texture.width),
-            this.safeCoord(row * this.pieceSize.texture.height),
-            this.pieceSize.texture.width,
-            this.pieceSize.texture.height
-        ));
-        const piece = new PIXI.Sprite(texture);
+        const piece = new PuzzlePiece(
+            new PIXI.Point(column * this.pieceSize.width, row * this.pieceSize.height),
+            {
+                width: this.pieceSize.width,
+                height: this.pieceSize.height
+            },
+            new PIXI.Texture(this.image.baseTexture, new PIXI.Rectangle(
+                this.safeCoord(column * this.pieceSize.texture.width),
+                this.safeCoord(row * this.pieceSize.texture.height),
+                this.pieceSize.texture.width,
+                this.pieceSize.texture.height
+            )));
 
-        piece.width = this.pieceSize.width;
-        piece.height = this.pieceSize.height;
-        piece.interactive = true;
-        piece.buttonMode = true;
-        piece.x = column * this.pieceSize.width;
-        piece.y = row * this.pieceSize.height;
+        piece.on('dragend', () => {
 
-        piece
-            .on('pointerdown', onDragStart)
-            .on('pointerup', onDragEnd)
-            .on('pointerupoutside', onDragEnd)
-            .on('pointermove', onDragMove);
+            if (this.valid) {
 
-        function onDragStart(event: PIXI.interaction.InteractionEvent) {
-
-            this.data = event.data;
-            this.alpha = 0.5;
-            this.dragging = this.data.getLocalPosition(this.parent);
-            this.parent.setChildIndex(this, this.parent.children.length - 1);
-        }
-
-        function onDragEnd() {
-
-            this.alpha = 1;
-            this.dragging = false;
-            this.data = null;
-        }
-
-        function onDragMove() {
-
-            if (this.dragging) {
-
-                const newPosition = this.data.getLocalPosition(this.parent);
-                this.x += (
-                    newPosition.x - this.dragging.x
-                );
-                this.y += (
-                    newPosition.y - this.dragging.y
-                );
-                this.dragging = newPosition;
+                alert('You did it!');
             }
-        }
+        });
 
         return piece;
+    }
+
+    protected createPieces() {
+
+        for (let r = 0; r < this.dimension.rows; r++) {
+
+            for (let c = 0; c < this.dimension.columns; c++) {
+
+                this.stage.addChild(this.createPieceForCell(r, c));
+            }
+        }
     }
 
     protected onImageLoad(texture: PIXI.Texture) {
@@ -87,13 +79,8 @@ export class Puzzle extends PIXI.Application {
             }
         };
 
-        for (let r = 0; r < this.dimension.rows; r++) {
-
-            for (let c = 0; c < this.dimension.columns; c++) {
-
-                this.stage.addChild(this.createPieceForCell(r, c));
-            }
-        }
+        this.createPieces();
+        this.shuffle();
     }
 
     protected loadImage(image: string) {
@@ -108,5 +95,21 @@ export class Puzzle extends PIXI.Application {
         super(...args);
 
         this.loadImage(image);
+    }
+
+    shuffle() {
+
+        const pieces = this.pieces;
+
+        for (let i = pieces.length - 1; i > 0; i--) {
+
+            const j = Math.floor(Math.random() * (
+                i + 1
+            ));
+
+            this.stage.swapChildren(pieces[ i ], pieces[ j ]);
+            [ pieces[ i ].x, pieces[ j ].x ] = [ pieces[ j ].x, pieces[ i ].x ];
+            [ pieces[ i ].y, pieces[ j ].y ] = [ pieces[ j ].y, pieces[ i ].y ];
+        }
     }
 }
