@@ -13,5 +13,5 @@ if (urlParams[ 'url' ] || urlParams[ 'path' ]) {
     document.body.appendChild(app.view);
 } else {
 
-    document.body.innerHTML = 'No puzzle';
+    document.body.innerHTML = '<h5>No puzzle</h5><p>Try to add one of next URL params:</p><pre>?url=&lt;image URL&gt;</pre><pre>?path=&lt;image URL path on https://upload.wikimedia.org/&gt;</pre>';
 }
