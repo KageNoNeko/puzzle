@@ -92,10 +92,15 @@ export class PuzzlePiece extends PIXI.Sprite {
 
         this.width = size.width;
         this.height = size.height;
-        this.x = this.validPosition.x;
-        this.y = this.validPosition.y;
 
+        this.moveToValidPosition();
         this.updateValidity();
         this.makeDraggable();
+    }
+
+    moveToValidPosition() {
+
+        this.x = this.validPosition.x;
+        this.y = this.validPosition.y;
     }
 }
