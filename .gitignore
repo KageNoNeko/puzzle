@@ -1,5 +1,4 @@
 .idea
 node_modules
 typings
-dist
 ts-out
