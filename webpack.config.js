@@ -13,7 +13,7 @@ module.exports = (env, argv) => {
         entry: `./main.ts`,
 
         output: {
-            filename: '[name].bundle.js',
+            filename: '[name].[hash].js',
             path: DESTINATION
         },
 
