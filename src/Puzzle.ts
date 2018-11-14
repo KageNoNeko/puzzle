@@ -48,11 +48,25 @@ export class Puzzle extends PIXI.Application {
 
             if (this.valid) {
 
-                alert('You did it!');
+                this.finish();
             }
         });
 
         return piece;
+    }
+
+    protected finish() {
+
+        this.stage.removeChildren();
+        const fullImage = new PIXI.Sprite(this.image);
+        fullImage.width = this.view.width;
+        fullImage.height = this.view.height;
+        const text = new PIXI.Text('You did it!', { fontFamily: 'Arial', fontSize: 48, fill: 0xff1010, dropShadow: true });
+        text.anchor.set(0.5);
+        text.x = this.view.width / 2;
+        text.y = this.view.height / 2;
+        this.stage.addChild(fullImage);
+        this.stage.addChild(text);
     }
 
     protected createPieces() {
