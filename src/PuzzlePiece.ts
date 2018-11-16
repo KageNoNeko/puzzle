@@ -86,7 +86,7 @@ export class PuzzlePiece extends PIXI.Sprite {
         this.emit('dragend');
     }
 
-    constructor(protected validPosition: PIXI.Point, size: Size, texture: PIXI.Texture) {
+    constructor(public validPosition: PIXI.Point, size: Size, texture: PIXI.Texture) {
 
         super(texture);
 

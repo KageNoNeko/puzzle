@@ -58,7 +58,7 @@ module.exports = (env, argv) => {
             ]
         },
 
-        plugins: [new HtmlWebpackPlugin()],
+        plugins: [ new HtmlWebpackPlugin({template: './index.html'}) ],
 
         devtool: 'cheap-module-source-map'
     };
