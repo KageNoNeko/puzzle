@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import { PuzzlePiece } from './PuzzlePiece';
 import { Puzzle } from '../puzzle/puzzle';
 import { PuzzleDimension, Size } from '../puzzle/types';
 import { fitSize } from '../puzzle/utils';
@@ -48,7 +47,7 @@ export class App extends PIXI.Application {
 
     protected hidePuzzle() {
 
-        this.stage.removeChildren(this.puzzle);
+        this.stage.removeChild(this.puzzle);
     }
 
     play(url: string): void {
@@ -57,6 +56,9 @@ export class App extends PIXI.Application {
         this.loader.load((_: any, resources: { [key: string]: PIXI.loaders.Resource }) => {
 
             this.createPuzzle(resources[ url ].texture, this.difficulties.newbie);
+            this.puzzle.shuffle();
+            this.puzzle.fill();
+            this.puzzle.once('completed', () => this.finish());
             this.showPuzzle();
         });
     }
@@ -74,16 +76,12 @@ export class App extends PIXI.Application {
 
     finish() {
 
-        this.puzzle.complete();
-        const fullImage = new PIXI.Sprite(this.image);
-        fullImage.width = this.screen.width;
-        fullImage.height = this.screen.height;
+        this.puzzle.disableDragging();
         const text = new PIXI.Text('You did it!',
                                    { fontFamily: 'Arial', fontSize: 48, fill: 0xff1010, dropShadow: true });
         text.anchor.set(0.5);
         text.x = this.screen.width / 2;
         text.y = this.screen.height / 2;
-        this.stage.addChild(fullImage);
         this.stage.addChild(text);
     }
 }

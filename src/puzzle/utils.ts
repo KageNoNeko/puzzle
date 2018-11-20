@@ -1,4 +1,4 @@
-import { Size } from './types';
+import { Point, Size } from './types';
 
 export function safePixel(value: number): number {
 
@@ -23,4 +23,9 @@ export function fitSize(given: Size, available: Size): Size {
             width: available.width,
             height: safePixel(available.width / givenRatio)
         };
+}
+
+export function distance(from: Point, to: Point): number {
+
+    return Math.sqrt(Math.pow(to.x - from.x, 2) + Math.pow(to.y - from.y, 2));
 }
