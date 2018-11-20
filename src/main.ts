@@ -19,7 +19,7 @@ if (urlParams[ 'url' ] || urlParams[ 'path' ] || urlParams[ 'local' ]) {
 
     app.maximize();
     app.play(<string>urlParams[ 'url' ] || (
-        urlParams[ 'path' ] ? `https://upload.wikimedia.org/${urlParams[ 'path' ]}` : `/images/${urlParams[ 'local' ]}`
+        urlParams[ 'path' ] ? `https://upload.wikimedia.org/${urlParams[ 'path' ]}` : `./images/${urlParams[ 'local' ]}`
     ));
 
     window.addEventListener('resize', () => app.maximize());
