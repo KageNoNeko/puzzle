@@ -13,6 +13,7 @@ export class App extends PIXI.Application {
     protected createPuzzle(texture: PIXI.Texture, difficult: PuzzleDimension) {
 
         this.puzzle = new Puzzle(texture, fitSize(texture, this.screen), difficult);
+        this.puzzle.stickDistance = 60;
     }
 
     protected placePuzzle() {
