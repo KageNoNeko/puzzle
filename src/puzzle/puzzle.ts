@@ -7,7 +7,7 @@ export class Puzzle extends PIXI.Container {
 
     protected pieceSize: Size;
     protected pieceTextureSize: Size;
-    protected stickDistance: number = 15;
+    stickDistance: number = 15;
 
     pieces: PuzzlePiece[] = [];
 
