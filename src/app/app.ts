@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import { Puzzle } from '../puzzle/puzzle';
 import { PuzzleDimension, Size } from '../puzzle/types';
 import { fitSize } from '../puzzle/utils';
+import { DropEffect } from '../puzzle/drop-effect';
 
 export class App extends PIXI.Application {
 
@@ -51,6 +52,13 @@ export class App extends PIXI.Application {
         this.stage.removeChild(this.puzzle);
     }
 
+    constructor(options?: PIXI.ApplicationOptions) {
+
+        super(options);
+
+        this.loader.add('dropEffect', './images/cartoon-smoke.png');
+    }
+
     play(url: string): void {
 
         this.loader.add(url);
@@ -60,6 +68,7 @@ export class App extends PIXI.Application {
             this.puzzle.shuffle();
             this.puzzle.fill();
             this.puzzle.once('completed', () => this.finish());
+            this.puzzle.setDropEffect(new DropEffect(PIXI.Texture.fromImage('dropEffect')));
             this.showPuzzle();
         });
     }
