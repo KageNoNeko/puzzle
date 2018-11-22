@@ -10,6 +10,7 @@ export class PuzzlePiece extends PIXI.Sprite {
     protected dragFilters: PIXI.Filter<any>[] = [
         new DropShadowFilter()
     ];
+
     protected dragging: {
         data: PIXI.interaction.InteractionData,
         position: PIXI.Point

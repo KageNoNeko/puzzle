@@ -1,7 +1,9 @@
 import * as PIXI from 'pixi.js';
+import * as Sounds from 'pixi-sound';
 import { Puzzle } from '../puzzle/puzzle';
-import { PuzzleDimension, Size } from '../puzzle/types';
+import { PuzzleDimension } from '../puzzle/types';
 import { fitSize } from '../puzzle/utils';
+import { DropEffect } from '../puzzle/drop-effect';
 
 export class App extends PIXI.Application {
 
@@ -51,6 +53,14 @@ export class App extends PIXI.Application {
         this.stage.removeChild(this.puzzle);
     }
 
+    constructor(options?: PIXI.ApplicationOptions) {
+
+        super(Object.assign({ sharedLoader: true }, options));
+
+        this.loader.add('dropEffectImage', './assets/images/cartoon-smoke.png');
+        this.loader.add('dropEffectSound', './assets/sounds/drop.{m4a,ogg}');
+    }
+
     play(url: string): void {
 
         this.loader.add(url);
@@ -60,6 +70,9 @@ export class App extends PIXI.Application {
             this.puzzle.shuffle();
             this.puzzle.fill();
             this.puzzle.once('completed', () => this.finish());
+            this.puzzle.setDropEffect(
+                new DropEffect(PIXI.Texture.fromImage('dropEffectImage'),
+                               Sounds.Sound.from(resources.dropEffectSound)));
             this.showPuzzle();
         });
     }

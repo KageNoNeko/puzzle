@@ -2,11 +2,15 @@ import * as PIXI from 'pixi.js';
 import { Point, PuzzleCell, PuzzleDimension, Size } from './types';
 import { distance, safePixel } from './utils';
 import { PuzzlePiece } from './puzzle-piece';
+import { DropEffect } from './drop-effect';
 
 export class Puzzle extends PIXI.Container {
 
     protected pieceSize: Size;
     protected pieceTextureSize: Size;
+
+    protected dropEffect: DropEffect;
+
     stickDistance: number = 15;
 
     pieces: PuzzlePiece[] = [];
@@ -64,6 +68,16 @@ export class Puzzle extends PIXI.Container {
         };
     }
 
+    protected getCellCenterPoint(cell: PuzzleCell): Point {
+
+        const cellPoint = this.getCellPoint(cell);
+
+        return {
+            x: cellPoint.x + this.pieceSize.width / 2,
+            y: cellPoint.y + this.pieceSize.height / 2
+        };
+    }
+
     protected getPieceCellDistance(piece: PuzzlePiece, cell?: PuzzleCell): number {
 
         const cellPoint = this.getCellPoint(cell || piece.cell);
@@ -108,6 +122,11 @@ export class Puzzle extends PIXI.Container {
         if (this.pieceCanStickToCell(piece, nearestCell)) {
 
             this.movePieceToCell(piece, nearestCell);
+
+            if (this.dropEffect) {
+
+                this.dropEffect.play(piece);
+            }
         }
 
         if (this.completed) {
@@ -118,7 +137,6 @@ export class Puzzle extends PIXI.Container {
 
     protected createPiece(cell: PuzzleCell): PuzzlePiece {
 
-        // @todo make them movable
         const piece = new PuzzlePiece(this.createPieceTexture(cell), cell);
         piece.width = this.pieceSize.width;
         piece.height = this.pieceSize.height;
@@ -143,6 +161,16 @@ export class Puzzle extends PIXI.Container {
 
         this.calculateSizes();
         this.createPieces();
+    }
+
+    setDropEffect(effect: DropEffect) {
+
+        this.dropEffect = effect;
+    }
+
+    removeDropEffect() {
+
+        this.dropEffect = null;
     }
 
     shuffle() {
