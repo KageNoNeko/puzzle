@@ -19,6 +19,7 @@
     "file-loader": "^2.0.0",
     "html-webpack-plugin": "^3.2.0",
     "pixi-particles": "^3.1.0",
+    "pixi-sound": "^2.0.4",
     "pixi.js": "^4.8.2",
     "query-string": "^6.2.0",
     "reflect-metadata": "^0.1.12",

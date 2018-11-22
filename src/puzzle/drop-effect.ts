@@ -1,4 +1,4 @@
-import particles = require('pixi-particles');
+import * as Particles from 'pixi-particles';
 import { PuzzlePiece } from './puzzle-piece';
 
 export const DropEffectDefaults = {
@@ -44,24 +44,25 @@ export const DropEffectDefaults = {
 
 export class DropEffect {
 
-    protected _emitter: particles.Emitter;
+    protected _emitter: Particles.Emitter;
 
-    protected getEmitter(piece: PuzzlePiece): particles.Emitter {
+    protected getEmitter(piece: PuzzlePiece): Particles.Emitter {
 
         if (!this._emitter) {
 
-            this._emitter = new particles.Emitter(piece, [ this.texture ], DropEffectDefaults);
+            this._emitter = new Particles.Emitter(piece, [ this.texture ], DropEffectDefaults);
             this._emitter.autoUpdate = true;
             this._emitter.emit = false;
         } else {
 
             this._emitter.parent = piece;
+            this._emitter.resetPositionTracking();
         }
 
         return this._emitter;
     }
 
-    constructor(protected texture: PIXI.Texture) {
+    constructor(protected texture: PIXI.Texture, protected sound?: PIXI.sound.Sound) {
     }
 
     play(piece: PuzzlePiece) {
@@ -69,7 +70,11 @@ export class DropEffect {
         const emitter = this.getEmitter(piece);
 
         emitter.emit = true;
-        emitter.resetPositionTracking();
-        // emitter.updateSpawnPos(cellCenter.x, cellCenter.y);
+        emitter.updateSpawnPos(piece.width / 2, piece.height / 2);
+
+        if (this.sound) {
+
+            this.sound.play();
+        }
     }
 }

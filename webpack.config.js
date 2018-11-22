@@ -66,6 +66,10 @@ module.exports = (env, argv) => {
             new HtmlWebpackPlugin({template: './index.html'}),
             new CopyWebpackPlugin([
                                       {
+                                          from: 'assets',
+                                          to: 'assets'
+                                      },
+                                      {
                                           from: 'images',
                                           to: 'images'
                                       }
