@@ -25,6 +25,22 @@ export function fitSize(given: Size, available: Size): Size {
         };
 }
 
+export function percentageSize(size: Size, percentage: number | { width: number, height: number }): Size {
+
+    if (typeof percentage === 'number') {
+
+        percentage = {
+            width: percentage,
+            height: percentage
+        };
+    }
+
+    return {
+        width: size.width * percentage.width / 100,
+        height: size.height * percentage.height / 100
+    };
+}
+
 export function distance(from: Point, to: Point): number {
 
     return Math.sqrt(Math.pow(to.x - from.x, 2) + Math.pow(to.y - from.y, 2));
