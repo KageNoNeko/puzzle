@@ -8,6 +8,7 @@ export class Puzzle extends PIXI.Container {
 
     protected pieceSize: Size;
     protected pieceTextureSize: Size;
+    protected background: PIXI.Graphics;
 
     protected dropEffect: DropEffect;
 
@@ -17,7 +18,7 @@ export class Puzzle extends PIXI.Container {
 
     get completed(): boolean {
 
-        return this.pieces.every((piece) => this.pieceIsInRightCell(piece));
+        return this.pieces.every((piece) => piece.parent && this.pieceIsInRightCell(piece));
     }
 
     protected forEachCell(cb: (cell: PuzzleCell) => void): void {
@@ -29,13 +30,6 @@ export class Puzzle extends PIXI.Container {
                 cb({ row, column });
             }
         }
-    }
-
-    protected pieceIsInRightCell(piece: PuzzlePiece): boolean {
-
-        const cellPoint = this.getCellPoint(piece.cell);
-
-        return piece.x === cellPoint.x && piece.y === cellPoint.y;
     }
 
     protected pieceCanStickToCell(piece: PuzzlePiece, cell?: PuzzleCell): boolean {
@@ -105,6 +99,16 @@ export class Puzzle extends PIXI.Container {
         };
     }
 
+    protected createBackground(): void {
+
+        this.background = new PIXI.Graphics();
+        this.background
+            .lineStyle(2, 0x0000FF, 1)
+            .beginFill(0xFF700B, 1)
+            .drawRect(0, 0, this.size.width, this.size.height);
+        this.addChild(this.background);
+    }
+
     protected createPieceTexture(cell: PuzzleCell): PIXI.Texture {
 
         return new PIXI.Texture(this.texture.baseTexture, new PIXI.Rectangle(
@@ -160,7 +164,15 @@ export class Puzzle extends PIXI.Container {
         super();
 
         this.calculateSizes();
+        this.createBackground();
         this.createPieces();
+    }
+
+    pieceIsInRightCell(piece: PuzzlePiece): boolean {
+
+        const cellPoint = this.getCellPoint(piece.cell);
+
+        return piece.x === cellPoint.x && piece.y === cellPoint.y;
     }
 
     setDropEffect(effect: DropEffect) {
@@ -194,6 +206,7 @@ export class Puzzle extends PIXI.Container {
     clear(): void {
 
         this.removeChildren();
+        this.addChild(this.background);
     }
 
     complete(): void {
