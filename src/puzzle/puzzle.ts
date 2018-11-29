@@ -129,7 +129,7 @@ export class Puzzle extends PIXI.Container {
 
             if (this.dropEffect) {
 
-                this.dropEffect.play(piece);
+                this.dropEffect.show(piece);
             }
         }
 
